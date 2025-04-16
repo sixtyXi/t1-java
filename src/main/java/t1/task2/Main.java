@@ -46,7 +46,7 @@ public class Main {
                 .filter(it -> "Инженер".equals(it.getTitle()))
                 .mapToDouble(Employee::getAge)
                 .average()
-                .orElse(0.0);
+                .orElseThrow();
 
 
         // Найдите в списке слов самое длинное
