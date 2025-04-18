@@ -1,14 +1,14 @@
 package t1.task3;
 
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CustomThreadPoolExecutor {
     private final LinkedList<Runnable> queue;
-    private final Object monitor = new Object();
-    private volatile boolean terminated = false;
+    private final AtomicBoolean terminated = new AtomicBoolean(false);
     private final Thread[] threads;
 
-    CustomThreadPoolExecutor(Integer poolSize) {
+    CustomThreadPoolExecutor(int poolSize) {
         this.queue = new LinkedList<>();
 
         if (poolSize <= 0) {
@@ -18,8 +18,8 @@ public class CustomThreadPoolExecutor {
         this.threads = new Thread[poolSize];
 
         for (int i = 0; i < poolSize; i++) {
-            this.threads[i] = new Thread(() -> {
-                while (!Thread.currentThread().isInterrupted() && !terminated) {
+            Thread thread = new Thread(() -> {
+                while (!Thread.currentThread().isInterrupted() && !terminated.get()) {
                     System.out.println(Thread.currentThread().getName() + " start of loop");
                     Runnable task = this.take();
 
@@ -35,16 +35,18 @@ public class CustomThreadPoolExecutor {
                 }
             });
 
-            this.threads[i].start();
+            thread.setName("Worker-" + (i + 1));
+            thread.start();
+            this.threads[i] = thread;
         }
     }
 
     private Runnable take() {
-        synchronized (monitor) {
-            while (queue.isEmpty() && !terminated) {
+        synchronized (queue) {
+            while (queue.isEmpty() && !terminated.get()) {
                 try {
                     System.out.println(Thread.currentThread().getName() + " wait");
-                    monitor.wait();
+                    queue.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return null;
@@ -64,21 +66,21 @@ public class CustomThreadPoolExecutor {
             throw new NullPointerException("Task can not be null");
         }
 
-        synchronized (monitor) {
-           if (terminated) {
+        synchronized (queue) {
+           if (terminated.get()) {
                throw new IllegalStateException("Thread pool has been shutdown");
            }
 
            queue.add(task);
-           monitor.notifyAll();
+           queue.notifyAll();
         }
     }
 
     public void shutdown() {
-        synchronized (monitor) {
+        synchronized (queue) {
             System.out.println("Thread pool terminated");
-            terminated = true;
-            monitor.notifyAll();
+            terminated.set(true);
+            queue.notifyAll();
         }
     }
 
