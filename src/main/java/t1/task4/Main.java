@@ -1,5 +1,13 @@
 package t1.task4;
 
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+
+import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
+
 /*
 
 - Разверните локально postgresql БД, создайте таблицу users (id bigserial primary key, username varchar(255) unique);
@@ -16,8 +24,28 @@ package t1.task4;
 
 - Создайте Spring Context, получите из него бин UserService и выполните все возможные операции
  */
+@ComponentScan
 public class Main {
     public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
 
+        UserService userService = context.getBean(UserService.class);
+
+        try {
+            // Получить всех пользователей
+            List<User> users = userService.getAllUsers();
+            System.out.println("Все пользователи: " + Arrays.toString(users.toArray()));
+            // Создать пользователя
+            long id = userService.createUser(new User(null, "Иван Иванович Иванов"));
+            // Получить по id
+            System.out.println("createdUser: " + userService.getUser(id));
+            // Обновить пользователя
+            userService.updateUser(new User(id, "Василий Васильевич Васильев"));
+            System.out.println("updatedUser: " + userService.getUser(id));
+            // Удалить
+            userService.deleteUser(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
