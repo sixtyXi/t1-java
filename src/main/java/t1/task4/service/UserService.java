@@ -1,6 +1,8 @@
-package t1.task4;
+package t1.task4.service;
 
 import org.springframework.stereotype.Service;
+import t1.task4.entity.User;
+import t1.task4.repository.UserDao;
 
 import java.util.List;
 

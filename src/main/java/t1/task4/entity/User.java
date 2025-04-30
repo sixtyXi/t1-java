@@ -1,4 +1,4 @@
-package t1.task4;
+package t1.task4.entity;
 
 public class User {
     private final Long id;

@@ -1,7 +1,9 @@
-package t1.task4;
+package t1.task4.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.stereotype.Repository;
+import t1.task4.entity.User;
+import t1.task4.exception.DataAccessException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -92,7 +94,7 @@ public class UserDao {
     public List<User> getAll() throws Exception {
         String sql = "select * from users";
 
-        try (Connection connection = dataSource.getConnection();) {
+        try (Connection connection = dataSource.getConnection()) {
             try (ResultSet resultSet = connection.createStatement().executeQuery(sql)) {
                 List<User> users = new ArrayList<>();
                 while (resultSet.next()) {

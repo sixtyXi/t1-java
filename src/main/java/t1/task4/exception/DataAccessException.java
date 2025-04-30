@@ -1,6 +1,6 @@
-package t1.task4;
+package t1.task4.exception;
 
-class DataAccessException extends Exception {
+public class DataAccessException extends Exception {
     public DataAccessException(String message) {
         super(message);
     }

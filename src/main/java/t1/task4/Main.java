@@ -1,10 +1,10 @@
 package t1.task4;
 
-import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import t1.task4.entity.User;
+import t1.task4.service.UserService;
 
-import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
 
