@@ -79,7 +79,8 @@ public class UserService {
         try {
             return userRepository.findAll();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("Ошибка получения списка пользователей: {}", e.getMessage(), e);
+            throw new RuntimeException("Ошибка получения списка пользователей.", e);
         }
     }
 }
