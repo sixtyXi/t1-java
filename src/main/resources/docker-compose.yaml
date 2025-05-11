@@ -2,7 +2,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:17.4
-    container_name: t1_postgres
+    container_name: t1_postgres_v1
     environment:
       POSTGRES_PASSWORD: secret
     ports:
