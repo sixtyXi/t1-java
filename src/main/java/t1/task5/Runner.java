@@ -17,7 +17,7 @@ public class Runner implements CommandLineRunner {
     private final UserService userService;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         try {
             // Получить всех пользователей
             List<User> users = userService.getAllUsers();
