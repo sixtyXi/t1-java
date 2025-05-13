@@ -14,6 +14,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class Runner implements CommandLineRunner {
+
     private final UserService userService;
 
     @Override
