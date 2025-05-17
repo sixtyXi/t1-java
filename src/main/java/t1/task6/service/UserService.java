@@ -1,10 +1,10 @@
-package t1.task5.service;
+package t1.task6.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import t1.task5.entity.User;
-import t1.task5.repository.UserRepository;
+import t1.task6.entity.User;
+import t1.task6.repository.UserRepository;
 
 import java.util.List;
 
