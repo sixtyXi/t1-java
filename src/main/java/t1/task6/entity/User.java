@@ -1,9 +1,11 @@
-package t1.task5.entity;
+package t1.task6.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,6 +22,9 @@ public class User {
     @Column(name = "username", unique = true)
     private String username;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Product> products;
+
     public User(Long id, String username) {
         this.id = id;
         this.username = username;
@@ -28,8 +33,8 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
+                ", id=" + id +
                 '}';
     }
 }
