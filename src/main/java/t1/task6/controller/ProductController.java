@@ -25,7 +25,6 @@ public class ProductController {
 
     @GetMapping(value = "/user/{userId}")
     public ListResponse<ProductProjection> getProductsByUserId(@PathVariable("userId") Long userId) {
-        List<ProductProjection> products = productService.findProductsByUserId(userId);
-        return new ListResponse<>(products);
+        return new ListResponse<>(productService.findProductsByUserId(userId));
     }
 }
