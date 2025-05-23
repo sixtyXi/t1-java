@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import t1.task6.dto.ApiError;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -14,4 +15,11 @@ public class RestExceptionHandler {
     public ApiError handleEntityNotFoundException(EntityNotFoundException e) {
         return new ApiError(e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public ApiError handleBadRequestException(BadRequestException e) {
+        return new ApiError(e.getMessage());
+    }
+
 }

@@ -1,15 +1,15 @@
 package t1.task6.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import t1.task6.dto.DebitRequest;
 import t1.task6.dto.ListResponse;
+import t1.task6.exception.BadRequestException;
 import t1.task6.projection.ProductProjection;
 import t1.task6.service.ProductService;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/products")
@@ -23,8 +23,29 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping(value = "/debit")
+    public void decreaseProductBalance(@RequestBody DebitRequest debitRequest) throws BadRequestException {
+        Long productId = debitRequest.productId();
+        if (productId == null || productId <= 0) {
+            throw new BadRequestException("ID не может быть null или меньше 0");
+        }
+
+        String amount = debitRequest.amount();
+        if (amount == null || amount.isEmpty()) {
+            throw new BadRequestException("Amount не может быть пустым");
+        }
+
+        try {
+            productService.decreaseProductBalance(productId, new BigDecimal(amount));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
     @GetMapping(value = "/user/{userId}")
     public ListResponse<ProductProjection> getProductsByUserId(@PathVariable("userId") Long userId) {
         return new ListResponse<>(productService.findProductsByUserId(userId));
     }
+
 }
