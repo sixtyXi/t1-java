@@ -2,8 +2,11 @@ package t1.task6.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import t1.task6.dto.DebitRequest;
 import t1.task6.projection.ProductProjection;
 import t1.task6.repository.ProductRepository;
 
@@ -12,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -26,27 +30,23 @@ public class ProductService {
     }
 
     @Transactional
-    public void decreaseProductBalance(Long productId, BigDecimal amount) {
-        if (productId == null || productId <= 0) {
-            throw new IllegalArgumentException("ID не может быть null");
-        }
+    public void decreaseProductBalance(@Valid DebitRequest debitRequest) {
+        ProductProjection productProjection = getProductById(debitRequest.productId());
 
-        if (amount == null) {
-            throw new IllegalArgumentException("Не указана сумма списания");
-        }
-        ProductProjection productProjection = getProductById(productId);
-        BigDecimal newBalance = productProjection.getBalance().subtract(amount);
+        BigDecimal newBalance = productProjection.
+                getBalance()
+                .subtract(new BigDecimal(debitRequest.amount()));
 
         if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Недостаточно средств на счете");
         }
 
-        updateProductBalance(productId, newBalance);
+        updateProductBalance(new DebitRequest(debitRequest.productId(), newBalance.toString()));
     }
 
     @Transactional
-    public void updateProductBalance(Long productId, BigDecimal productBalance) {
-        int updated = productRepository.updateProductBalance(productId, productBalance);
+    public void updateProductBalance(@Valid DebitRequest debitRequest) {
+        int updated = productRepository.updateProductBalance(debitRequest.productId(), new BigDecimal(debitRequest.amount()));
 
         if (updated == 0) {
             throw new EntityNotFoundException("Продукт не найден");
