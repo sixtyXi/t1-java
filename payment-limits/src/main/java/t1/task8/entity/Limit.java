@@ -13,16 +13,16 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "payments")
-public class Payment {
+@Table(name = "limits")
+public class Limit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
+    @Column(name = "user_limit", nullable = false)
+    private BigDecimal userLimit;
 
     @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
@@ -31,7 +31,7 @@ public class Payment {
     public String toString() {
         return "Payment{" +
                 "id=" + id +
-                ", amount=" + amount +
+                ", userLimit=" + userLimit +
                 ", userId=" + userId +
                 '}';
     }

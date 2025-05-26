@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>payment-core</module>
+        <module>limit-core</module>
         <module>base</module>
-        <module>payment-limits</module>
+        <module>limit-limits</module>
     </modules>
 
     <properties>

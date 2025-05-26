@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record PaymentRequest(
+public record LimitChangeRequest(
         @NotNull(message = "userId не может быть null")
         @Min(value = 1, message = "userId не может быть меньше 1")
         Long userId,
